@@ -1,4 +1,4 @@
-namespace ExchangeRate.Core.Entities;
+namespace ExchangeRate.Domain.Entities;
 
 public class Currency
 {
