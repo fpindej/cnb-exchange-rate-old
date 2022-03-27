@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml.Serialization;
 
 namespace ExchangeRate.Infrastructure.CNB.Core.Models;
@@ -11,8 +12,15 @@ public class ExchangeRate
     [XmlAttribute(AttributeName = "banka")]
     public string Bank { get; set; }
 
-    [XmlAttribute(AttributeName = "datum")]
-    public string Date { get; set; }
+    [XmlIgnore]
+    public DateTime Date { get; set; }
+
+    [XmlAttribute("datum")]
+    public string DateFormatted
+    {
+        get => Date.ToString(CNBConstants.DateFormat, CultureInfo.InvariantCulture);
+        set => Date = DateTime.ParseExact(value, CNBConstants.DateFormat, CultureInfo.InvariantCulture);
+    }
 
     [XmlAttribute(AttributeName = "poradi")]
     public int OrderNo { get; set; }

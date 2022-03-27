@@ -5,7 +5,8 @@ namespace ExchangeRate.Infrastructure.CNBClient.Services;
 
 public class ExchangeRateService : IExchangeRateService
 {
-    private const string ExchangeRatesUrl = "cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml";
+    //ToDo inject IOptions or IConfiguration to get the endpoint
+    private const string ExchangeRatesUrl = "cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml2";
     private readonly HttpClient _httpClient;
 
     public ExchangeRateService(HttpClient httpClient)
@@ -18,8 +19,10 @@ public class ExchangeRateService : IExchangeRateService
         var response = await _httpClient.GetAsync(ExchangeRatesUrl);
 
         if (IsResponseInvalid(response))
-            throw new HttpRequestException("Http request error");
-
+        {
+            //TODO log exception
+            throw new HttpRequestException($"Http request error: {response.StatusCode}");
+        }
         return response;
     }
 

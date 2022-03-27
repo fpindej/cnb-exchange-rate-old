@@ -1,6 +1,6 @@
-using System.Xml.Serialization;
 using ExchangeRate.Infrastructure.CNB.Core.Repositories;
 using ExchangeRate.Infrastructure.CNB.Core.Services;
+using ExchangeRate.Infrastructure.Common.Helper;
 
 namespace ExchangeRate.Infrastructure.CNBClient.Repositories;
 
@@ -13,14 +13,25 @@ public class ExchangeRateRepository : IExchangeRateRepository
         _exchangeRateService = exchangeRateService;
     }
 
-    public async Task<string> GetExchangeRatesAsync()
+    public async Task<CNB.Core.Models.ExchangeRate?> GetExchangeRatesAsync()
     {
-        var data = await _exchangeRateService.FetchDataAsync();
+        var response = await _exchangeRateService.FetchDataAsync();
         
-        var xmlSerializer = new XmlSerializer(typeof(CNB.Core.Models.ExchangeRate));
+        //ToDo if response is 200 but empty log and throw exception, otherwise just go on
         
-        var rates = (CNB.Core.Models.ExchangeRate)xmlSerializer.Deserialize(data.Content.ReadAsStreamAsync().Result);
+        var content = await response.Content.ReadAsStringAsync();
 
-        return "lol";
+        
+        // ToDo put this to separete private method
+        try
+        {
+            return content.FromXml<CNB.Core.Models.ExchangeRate>();
+        }
+        catch (Exception e)
+        {
+            //log and throw
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

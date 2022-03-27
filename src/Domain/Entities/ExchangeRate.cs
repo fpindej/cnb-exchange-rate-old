@@ -9,11 +9,11 @@ public class ExchangeRate
         Value = value;
     }
 
-    public Currency SourceCurrency { get; }
+    private Currency SourceCurrency { get; }
 
-    public Currency TargetCurrency { get; }
+    private Currency TargetCurrency { get; }
 
-    public decimal Value { get; }
+    private decimal Value { get; }
 
     public override string ToString() => $"{SourceCurrency}/{TargetCurrency}={Value}";
 }

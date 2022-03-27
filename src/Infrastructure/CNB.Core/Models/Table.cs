@@ -6,7 +6,7 @@ namespace ExchangeRate.Infrastructure.CNB.Core.Models;
 public class Table
 {
     [XmlElement(ElementName = "radek")]
-    public List<Row> Radek { get; set; }
+    public List<Row> Rows { get; set; }
 
     [XmlAttribute(AttributeName = "typ")]
     public string Type { get; set; }

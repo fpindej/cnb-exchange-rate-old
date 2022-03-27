@@ -1,12 +1,15 @@
+using ExchangeRate.Infrastructure.CNB.Core;
 using ExchangeRate.Infrastructure.CNB.Core.Repositories;
 using ExchangeRate.Infrastructure.CNB.Core.Services;
+using ExchangeRate.Infrastructure.CNBClient;
 using ExchangeRate.Infrastructure.CNBClient.Repositories;
 using ExchangeRate.Infrastructure.CNBClient.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton<IExchangeRateRepository, ExchangeRateRepository>();
+builder.Services.AddScoped<IExchangeRateRepository, ExchangeRateRepository>();
+builder.Services.AddScoped<IExchangeRateProvider,ExchangeRateProvider>();
 builder.Services.AddHttpClient<IExchangeRateService, ExchangeRateService>(opt => { opt.BaseAddress = new Uri(builder.Configuration["CNB:BaseUrl"]); });
 
 builder.Services.AddControllers();

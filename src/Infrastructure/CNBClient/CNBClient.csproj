@@ -8,12 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Domain\Domain.csproj" />
-        <ProjectReference Include="..\CNB.Core\CNB.Core.csproj" />
+        <ProjectReference Include="..\..\Domain\Domain.csproj"/>
+        <ProjectReference Include="..\CNB.Core\CNB.Core.csproj"/>
+        <ProjectReference Include="..\Common\Common.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+        <PackageReference Include="System.Linq.Async" Version="6.0.1"/>
     </ItemGroup>
 
 </Project>
