@@ -14,12 +14,13 @@ namespace ExchangeRate.WebApi;
 
 public class Startup
 {
+    private readonly IConfiguration _configuration;
+
     public Startup(IConfiguration configuration)
     {
-        Configuration = configuration;
+        _configuration = configuration;
     }
 
-    private IConfiguration Configuration { get; }
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
@@ -39,12 +40,19 @@ public class Startup
         Log.Debug("ConfigureServices => Setting IExchangeRateProvider");
         services.AddScoped<IExchangeRateProvider, ExchangeRateProvider>();
 
+        Log.Debug("ConfigureServices => Get CNB:BaseUrl");
+        var baseUrl = GetConfigurationValue("CNB:BaseUrl", "https://www.cnb.cz/");
+
+        Log.Debug("ConfigureServices => Get CNB:RetryCount");
+        var retryCount = GetConfigurationValue("CNB:RetryCount", 5);
+
         Log.Debug("ConfigureServices => Setting IExchangeRateService");
 
-        services.AddHttpClient<IExchangeRateService, ExchangeRateService>(opt => { opt.BaseAddress = new Uri(Configuration["CNB:BaseUrl"]); })
+        services.AddHttpClient<IExchangeRateService, ExchangeRateService>(opt => { opt.BaseAddress = new Uri(baseUrl); })
             .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-            .AddPolicyHandler(GetRetryPolicy(GetRetryCount()));
+            .AddPolicyHandler(GetRetryPolicy(retryCount));
     }
+
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -82,7 +90,6 @@ public class Startup
         app.UseRouting();
 
         Log.Debug("Setting UseEndpoints");
-
         app.UseEndpoints(endpoints =>
         {
             Log.Debug("Setting endpoints => MapControllers");
@@ -93,15 +100,19 @@ public class Startup
         });
     }
 
-    private int GetRetryCount()
+    private T GetConfigurationValue<T>(string key, T defaultValue)
     {
-        if (!int.TryParse(Configuration["CNB:RetryCount"], out var retryCount))
+        var value = _configuration[key];
+
+        if (string.IsNullOrWhiteSpace(value))
         {
-            retryCount = 5;
-            Log.Warning("No retry count specified. Using default value of 5");
+            Log.Warning("No value for key {Key}. Using default value of {Value}", key, defaultValue);
+            return defaultValue;
         }
 
-        return retryCount;
+        var res = (T)Convert.ChangeType(value, typeof(T));
+        Log.Information("Getting default value for {Key} => {Value}", key, res);
+        return res;
     }
 
     private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int retryCount) => HttpPolicyExtensions

@@ -25,7 +25,7 @@ public class ExchangeRateService : IExchangeRateService
         return response;
     }
 
-    private bool IsResponseInvalid(HttpResponseMessage resp)
+    private static bool IsResponseInvalid(HttpResponseMessage resp)
         => resp.StatusCode is HttpStatusCode.InternalServerError
             or HttpStatusCode.BadRequest
             or HttpStatusCode.GatewayTimeout

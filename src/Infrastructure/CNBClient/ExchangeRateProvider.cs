@@ -46,5 +46,5 @@ public class ExchangeRateProvider : IExchangeRateProvider
         return filter.Select(f => new Domain.Entities.ExchangeRate(new Currency(f.Code), defaultTargetCurrency, f.Rate));
     }
 
-    private IEnumerable<string> GetExchangeRatesStringValues(IEnumerable<Domain.Entities.ExchangeRate> exchangeRates) => exchangeRates.Select(f => f.ToString());
+    private static IEnumerable<string> GetExchangeRatesStringValues(IEnumerable<Domain.Entities.ExchangeRate> exchangeRates) => exchangeRates.Select(f => f.ToString());
 }
