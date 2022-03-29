@@ -15,7 +15,7 @@ public class ExchangeRateRepository : IExchangeRateRepository
         _exchangeRateService = exchangeRateService;
     }
 
-    public async Task<CNB.Core.Models.ExchangeRate> GetExchangeRatesAsync()
+    public async Task<Core.Models.ExchangeRate> GetExchangeRatesAsync()
     {
         var response = await _exchangeRateService.FetchDataAsync();
 
@@ -34,7 +34,7 @@ public class ExchangeRateRepository : IExchangeRateRepository
     {
         try
         {
-            return content.FromXml<CNB.Core.Models.ExchangeRate>();
+            return content.FromXml<Core.Models.ExchangeRate>();
         }
         catch (Exception e)
         {
