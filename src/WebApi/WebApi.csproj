@@ -13,7 +13,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Domain\Domain.csproj" />
-        <ProjectReference Include="..\Infrastructure\CNBClient\CNBClient.csproj" />
+        <ProjectReference Include="..\Infrastructure\CNBClient\CNB.Client.csproj" />
         <ProjectReference Include="..\Logging\Logging.csproj" />
     </ItemGroup>
 

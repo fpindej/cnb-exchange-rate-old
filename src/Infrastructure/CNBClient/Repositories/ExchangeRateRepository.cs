@@ -4,7 +4,7 @@ using ExchangeRate.Infrastructure.Common.Helper;
 using Logging.Exceptions;
 using Serilog;
 
-namespace ExchangeRate.Infrastructure.CNBClient.Repositories;
+namespace ExchangeRate.Infrastructure.CNB.Client.Repositories;
 
 public class ExchangeRateRepository : IExchangeRateRepository
 {

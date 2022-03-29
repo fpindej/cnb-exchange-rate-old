@@ -36,7 +36,6 @@ public class ExceptionHandlingMiddleware
         }
         catch (HttpRequestException e)
         {
-            //ToDo for multiple clients use custom exception type to handle this kind of error
             Log.Fatal(e, e.Message);
             throw LoggingHelper.CreateBaseExceptionModel(e.Message, context.Response.StatusCode, correlationId);
         }

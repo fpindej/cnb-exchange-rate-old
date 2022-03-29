@@ -6,7 +6,7 @@ using ExchangeRate.Infrastructure.Common;
 using Logging.Exceptions;
 using Microsoft.Extensions.Configuration;
 
-namespace ExchangeRate.Infrastructure.CNBClient;
+namespace ExchangeRate.Infrastructure.CNB.Client;
 
 public class ExchangeRateProvider : IExchangeRateProvider
 {

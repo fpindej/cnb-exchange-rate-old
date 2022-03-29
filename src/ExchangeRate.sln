@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CNB.Core", "Infrastructure\CNB.Core\CNB.Core.csproj", "{0C399FB6-71A5-4F5D-8557-978F8A685132}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CNBClient", "Infrastructure\CNBClient\CNBClient.csproj", "{765F41F2-86C5-4A5C-86B3-36A0D04F44A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CNB.Client", "Infrastructure\CNBClient\CNB.Client.csproj", "{765F41F2-86C5-4A5C-86B3-36A0D04F44A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Infrastructure\Common\Common.csproj", "{38E1D07A-70B2-4BDE-830A-4F1056F88A44}"
 EndProject

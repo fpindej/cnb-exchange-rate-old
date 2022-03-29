@@ -2,7 +2,7 @@ using System.Net;
 using ExchangeRate.Infrastructure.CNB.Core.Services;
 using Microsoft.Extensions.Configuration;
 
-namespace ExchangeRate.Infrastructure.CNBClient.Services;
+namespace ExchangeRate.Infrastructure.CNB.Client.Services;
 
 public class ExchangeRateService : IExchangeRateService
 {
