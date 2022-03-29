@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Infrastructure\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{59C85127-A648-4A1D-BE49-53AE2377E6BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "Logging\Logging.csproj", "{96C6DD7A-847C-49AE-85D8-43F8D8905F4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{59C85127-A648-4A1D-BE49-53AE2377E6BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59C85127-A648-4A1D-BE49-53AE2377E6BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59C85127-A648-4A1D-BE49-53AE2377E6BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96C6DD7A-847C-49AE-85D8-43F8D8905F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96C6DD7A-847C-49AE-85D8-43F8D8905F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96C6DD7A-847C-49AE-85D8-43F8D8905F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96C6DD7A-847C-49AE-85D8-43F8D8905F4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0C399FB6-71A5-4F5D-8557-978F8A685132} = {FC317CA6-13EB-413F-8B04-E40B5116EA2B}

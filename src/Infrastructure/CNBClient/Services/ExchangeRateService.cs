@@ -6,7 +6,7 @@ namespace ExchangeRate.Infrastructure.CNBClient.Services;
 public class ExchangeRateService : IExchangeRateService
 {
     //ToDo inject IOptions or IConfiguration to get the endpoint
-    private const string ExchangeRatesUrl = "cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml2";
+    private const string ExchangeRatesUrl = "cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml";
     private readonly HttpClient _httpClient;
 
     public ExchangeRateService(HttpClient httpClient)

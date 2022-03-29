@@ -1,35 +1,42 @@
-using ExchangeRate.Infrastructure.CNB.Core;
-using ExchangeRate.Infrastructure.CNB.Core.Repositories;
-using ExchangeRate.Infrastructure.CNB.Core.Services;
-using ExchangeRate.Infrastructure.CNBClient;
-using ExchangeRate.Infrastructure.CNBClient.Repositories;
-using ExchangeRate.Infrastructure.CNBClient.Services;
+using Logging;
+using Serilog;
+using LoggerConfigurationExtensions = Logging.LoggerConfigurationExtensions;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace ExchangeRate.WebApi;
 
-// Add services to the container.
-builder.Services.AddScoped<IExchangeRateRepository, ExchangeRateRepository>();
-builder.Services.AddScoped<IExchangeRateProvider,ExchangeRateProvider>();
-builder.Services.AddHttpClient<IExchangeRateService, ExchangeRateService>(opt => { opt.BaseAddress = new Uri(builder.Configuration["CNB:BaseUrl"]); });
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public static class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public static int Main()
+    {
+        const string appName = "ExchangeRate web API";
+
+        try
+        {
+            // Console logging for used for troubleshooting before getting all required info for logger
+            LoggerConfigurationExtensions.SetupLoggerConfiguration();
+
+            Log.Information("Starting web host {AppName}", appName);
+            CreateHostBuilder().Build().Run();
+            Log.Information("Ending web host {AppName}", appName);
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Host terminated unexpectedly {AppName}", appName);
+            return 1;
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
+    }
+
+    private static IHostBuilder CreateHostBuilder() =>
+        Host.CreateDefaultBuilder()
+            .UseSerilog((hostBuilderContext, services, loggerConfiguration) =>
+            {
+                loggerConfiguration.ConfigureBaseLogging();
+                // Potentially add cloud logging (AppInsights for Azure, AWS something....)
+            })
+            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
