@@ -4,7 +4,7 @@ namespace ExchangeRate.Infrastructure.Common;
 
 public static class CommonConstants
 {
-    public static IEnumerable<Currency> Currencies = new  List<Currency>
+    public static readonly IEnumerable<Currency> Currencies = new  List<Currency>
     {
         new Currency("USD"),
         new Currency("EUR"),
