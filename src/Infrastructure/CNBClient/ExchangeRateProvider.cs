@@ -1,50 +1,50 @@
+using System.ComponentModel.DataAnnotations;
 using ExchangeRate.Domain.Entities;
 using ExchangeRate.Infrastructure.CNB.Core;
 using ExchangeRate.Infrastructure.CNB.Core.Repositories;
 using ExchangeRate.Infrastructure.Common;
+using Logging.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace ExchangeRate.Infrastructure.CNBClient;
 
 public class ExchangeRateProvider : IExchangeRateProvider
 {
+    private readonly IConfiguration _configuration;
     private readonly IExchangeRateRepository _exchangeRateRepository;
 
-    public ExchangeRateProvider(IExchangeRateRepository exchangeRateRepository)
+    public ExchangeRateProvider(IExchangeRateRepository exchangeRateRepository, IConfiguration configuration)
     {
         _exchangeRateRepository = exchangeRateRepository;
+        _configuration = configuration;
     }
 
-    //ToDo could use middlewares for logging and global exception handling
     public async Task<IEnumerable<string>> GetExchangeRates()
     {
-        //ToDo refactor this shit (appsettings maybe or entry in API and default in appsettings, if nowhere ==> validationException)
-        try
-        {
-            var defaultTargetCurrency = new Currency("CZK");
-            var data = await _exchangeRateRepository.GetExchangeRatesAsync();
+        var defaultTargetCurrency = GetDefaultTargetCurrency();
+        var data = await _exchangeRateRepository.GetExchangeRatesAsync();
 
-            var result = FilterExchangeRates(data, defaultTargetCurrency);
-
-            if (result is null)
-                return new List<string>();
-
-            return DelejPico(result);
-        }
-        catch (Exception e)
-        {
-            //ToDo add logging
-            Console.WriteLine(e);
-            throw;
-        }
+        return GetExchangeRatesStringValues(FilterExchangeRates(data, defaultTargetCurrency));
     }
 
-    private static IEnumerable<Domain.Entities.ExchangeRate>? FilterExchangeRates(CNB.Core.Models.ExchangeRate? data, Currency defaultTargetCurrency)
+    private Currency GetDefaultTargetCurrency()
     {
-        var filter = data?.Table?.Rows?.Where(w => CommonConstants.Currencies.Select(s => s.Code).Contains(w.Code));
-        var result = filter?.Select(f => new Domain.Entities.ExchangeRate(new Currency(f.Code), defaultTargetCurrency, f.Rate));
+        var targetCurrency = _configuration.GetValue<string>("CNB:DefaultCurrency");
 
-        return result;
+        if (string.IsNullOrWhiteSpace(targetCurrency))
+            throw new ValidationException("Target currency cannot be empty");
+
+        return new Currency(targetCurrency);
     }
 
-    private IEnumerable<string> DelejPico(IEnumerable<Domain.Entities.ExchangeRate> exchangeRates) => exchangeRates.Select(f => f.ToString());
+    private static IEnumerable<Domain.Entities.ExchangeRate> FilterExchangeRates(CNB.Core.Models.ExchangeRate? data, Currency defaultTargetCurrency)
+    {
+        if (data?.Table.Rows is null)
+            throw new EmptyResultSetException("Data cannot be empty");
+
+        var filter = data.Table.Rows.Where(w => CommonConstants.Currencies.Select(s => s.Code).Contains(w.Code));
+        return filter.Select(f => new Domain.Entities.ExchangeRate(new Currency(f.Code), defaultTargetCurrency, f.Rate));
+    }
+
+    private IEnumerable<string> GetExchangeRatesStringValues(IEnumerable<Domain.Entities.ExchangeRate> exchangeRates) => exchangeRates.Select(f => f.ToString());
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using ExchangeRate.Infrastructure.CNB.Core.Services;
+using Serilog;
 
 namespace ExchangeRate.Infrastructure.CNBClient.Services;
 
@@ -20,9 +21,10 @@ public class ExchangeRateService : IExchangeRateService
 
         if (IsResponseInvalid(response))
         {
-            //TODO log exception
+            Log.Fatal("Http request error: {StatusCode}", response.StatusCode);
             throw new HttpRequestException($"Http request error: {response.StatusCode}");
         }
+
         return response;
     }
 

@@ -18,8 +18,7 @@ public static class LoggerConfigurationExtensions
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .WriteTo.Async(a => a.Console(theme: AnsiConsoleTheme.Code,
                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message:lj}{NewLine}{Exception:j}"))
-            .Enrich.FromLogContext()
-            .Enrich.WithCorrelationId();
+            .Enrich.FromLogContext();
 
         return loggerConfiguration;
     }

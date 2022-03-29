@@ -4,6 +4,7 @@ using ExchangeRate.Infrastructure.CNB.Core.Services;
 using ExchangeRate.Infrastructure.CNBClient;
 using ExchangeRate.Infrastructure.CNBClient.Repositories;
 using ExchangeRate.Infrastructure.CNBClient.Services;
+using Logging.Middlewares;
 using Serilog;
 
 namespace ExchangeRate.WebApi;
@@ -49,17 +50,17 @@ public class Startup
             Log.Debug("Using UseDeveloperExceptionPage");
             app.UseDeveloperExceptionPage();
 
-            Log.Debug("Setting cors");
-
+            Log.Debug("Setting cors => allow *");
             app.UseCors(builder =>
             {
-                Log.Debug("Setting cors => allow *");
                 builder.SetIsOriginAllowed(_ => true);
-                Log.Debug("Setting cors => AllowAnyHeader");
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
             });
         }
+        
+        Log.Debug("Setting Exception handling middleware");
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
         
         Log.Debug("Setting UseSwagger");
         app.UseSwagger();
@@ -72,9 +73,8 @@ public class Startup
 
         Log.Debug("Setting UseRouting");
         app.UseRouting();
-
+        
         Log.Debug("Setting UseEndpoints");
-
         app.UseEndpoints(endpoints =>
         {
             Log.Debug("Setting endpoints => MapControllers");
