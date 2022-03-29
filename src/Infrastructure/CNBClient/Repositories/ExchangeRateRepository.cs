@@ -27,6 +27,11 @@ public class ExchangeRateRepository : IExchangeRateRepository
         if (string.IsNullOrWhiteSpace(content))
             throw new EmptyResultSetException("No content available for CNB exchange rate request");
 
+        return ParseExchangeRateXml(content);
+    }
+
+    private static Core.Models.ExchangeRate ParseExchangeRateXml(string content)
+    {
         try
         {
             return content.FromXml<CNB.Core.Models.ExchangeRate>();
