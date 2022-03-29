@@ -9,5 +9,5 @@ public interface IExchangeRateService
     /// Fetches CNB exchange rate data via http client
     /// </summary>
     /// <returns>HttpResponseMessage</returns>
-    Task<HttpResponseMessage?> FetchDataAsync();
+    Task<HttpResponseMessage> FetchDataAsync();
 }

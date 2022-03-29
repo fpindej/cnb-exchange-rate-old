@@ -1,29 +1,26 @@
 using System.Net;
 using ExchangeRate.Infrastructure.CNB.Core.Services;
-using Serilog;
+using Microsoft.Extensions.Configuration;
 
 namespace ExchangeRate.Infrastructure.CNBClient.Services;
 
 public class ExchangeRateService : IExchangeRateService
 {
-    //ToDo inject IOptions or IConfiguration to get the endpoint
-    private const string ExchangeRatesUrl = "cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.xml";
+    private readonly string _exchangeRatesUrl;
     private readonly HttpClient _httpClient;
 
-    public ExchangeRateService(HttpClient httpClient)
+    public ExchangeRateService(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
+        _exchangeRatesUrl = configuration.GetValue<string>("CNB:RequestUrl");
     }
 
-    public async Task<HttpResponseMessage?> FetchDataAsync()
+    public async Task<HttpResponseMessage> FetchDataAsync()
     {
-        var response = await _httpClient.GetAsync(ExchangeRatesUrl);
+        var response = await _httpClient.GetAsync(_exchangeRatesUrl);
 
         if (IsResponseInvalid(response))
-        {
-            Log.Fatal("Http request error: {StatusCode}", response.StatusCode);
             throw new HttpRequestException($"Http request error: {response.StatusCode}");
-        }
 
         return response;
     }
@@ -33,7 +30,6 @@ public class ExchangeRateService : IExchangeRateService
             or HttpStatusCode.BadRequest
             or HttpStatusCode.GatewayTimeout
             or HttpStatusCode.NotImplemented
-            or HttpStatusCode.Unauthorized
             or HttpStatusCode.Forbidden
             or HttpStatusCode.NotFound
             or HttpStatusCode.BadGateway;

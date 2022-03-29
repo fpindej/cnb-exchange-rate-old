@@ -1,4 +1,4 @@
-namespace Logging.Models;
+namespace Logging.Exceptions;
 
 public class EmptyResultSetException : Exception
 {

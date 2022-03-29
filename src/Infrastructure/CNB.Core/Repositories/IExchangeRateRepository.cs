@@ -9,5 +9,5 @@ public interface IExchangeRateRepository
     ///     Gets the Exchange Rate data from a data source
     /// </summary>
     /// <returns>ExchangeRate</returns>
-    Task<Models.ExchangeRate?> GetExchangeRatesAsync();
+    Task<Models.ExchangeRate> GetExchangeRatesAsync();
 }

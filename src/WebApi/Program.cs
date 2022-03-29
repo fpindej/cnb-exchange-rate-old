@@ -33,7 +33,7 @@ public static class Program
 
     private static IHostBuilder CreateHostBuilder() =>
         Host.CreateDefaultBuilder()
-            .UseSerilog((hostBuilderContext, services, loggerConfiguration) =>
+            .UseSerilog((_, _, loggerConfiguration) =>
             {
                 loggerConfiguration.ConfigureBaseLogging();
                 // Potentially add cloud logging (AppInsights for Azure, AWS something....)

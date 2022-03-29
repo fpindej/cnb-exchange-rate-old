@@ -1,6 +1,8 @@
 using ExchangeRate.Infrastructure.CNB.Core.Repositories;
 using ExchangeRate.Infrastructure.CNB.Core.Services;
 using ExchangeRate.Infrastructure.Common.Helper;
+using Logging.Exceptions;
+using Serilog;
 
 namespace ExchangeRate.Infrastructure.CNBClient.Repositories;
 
@@ -13,25 +15,26 @@ public class ExchangeRateRepository : IExchangeRateRepository
         _exchangeRateService = exchangeRateService;
     }
 
-    public async Task<CNB.Core.Models.ExchangeRate?> GetExchangeRatesAsync()
+    public async Task<CNB.Core.Models.ExchangeRate> GetExchangeRatesAsync()
     {
         var response = await _exchangeRateService.FetchDataAsync();
-        
-        //ToDo if response is 200 but empty log and throw exception, otherwise just go on
-        
+
+        if (response is null)
+            throw new HttpRequestException("Http response is null or empty");
+
         var content = await response.Content.ReadAsStringAsync();
 
-        
-        // ToDo put this to separete private method
+        if (string.IsNullOrWhiteSpace(content))
+            throw new EmptyResultSetException("No content available for CNB exchange rate request");
+
         try
         {
             return content.FromXml<CNB.Core.Models.ExchangeRate>();
         }
         catch (Exception e)
         {
-            //log and throw
-            Console.WriteLine(e);
-            throw;
+            Log.Fatal(e, e.Message);
+            throw new XmlParsingException("Content from CNB xml request has invalid format");
         }
     }
 }

@@ -1,16 +1,14 @@
 using System.Net;
+using Logging.Exceptions;
 
 namespace Logging.Utils;
 
 public static class LoggingHelper
 {
-    public static BaseExceptionModel CreateBaseExceptionModel(string message, int statusCode, string correlationId)
+    public static BaseExceptionModel CreateBaseExceptionModel(string message, int statusCode, string correlationId) => new BaseExceptionModel
     {
-        return new BaseExceptionModel
-        {
-            Message = message,
-            StatusCode = (HttpStatusCode)statusCode,
-            CorrelationId = correlationId
-        };
-    }
+        Message = message,
+        StatusCode = (HttpStatusCode)statusCode,
+        CorrelationId = correlationId
+    };
 }

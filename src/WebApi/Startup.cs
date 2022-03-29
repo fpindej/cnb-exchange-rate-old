@@ -7,6 +7,7 @@ using ExchangeRate.Infrastructure.CNBClient.Services;
 using Logging.Middlewares;
 using Serilog;
 
+
 namespace ExchangeRate.WebApi;
 
 public class Startup
@@ -36,6 +37,8 @@ public class Startup
         Log.Debug("ConfigureServices => Setting IExchangeRateProvider");
         services.AddScoped<IExchangeRateProvider, ExchangeRateProvider>();
 
+        
+        //todo Microsoft.Extensions.Http.Polly https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/implement-http-call-retries-exponential-backoff-polly
         Log.Debug("ConfigureServices => Setting IExchangeRateService");
         services.AddHttpClient<IExchangeRateService, ExchangeRateService>(opt => { opt.BaseAddress = new Uri(Configuration["CNB:BaseUrl"]); });
     }

@@ -3,7 +3,7 @@ using ExchangeRate.Domain.Entities;
 using ExchangeRate.Infrastructure.CNB.Core;
 using ExchangeRate.Infrastructure.CNB.Core.Repositories;
 using ExchangeRate.Infrastructure.Common;
-using Logging.Models;
+using Logging.Exceptions;
 using Microsoft.Extensions.Configuration;
 
 namespace ExchangeRate.Infrastructure.CNBClient;
@@ -37,7 +37,7 @@ public class ExchangeRateProvider : IExchangeRateProvider
         return new Currency(targetCurrency);
     }
 
-    private static IEnumerable<Domain.Entities.ExchangeRate> FilterExchangeRates(CNB.Core.Models.ExchangeRate? data, Currency defaultTargetCurrency)
+    private static IEnumerable<Domain.Entities.ExchangeRate> FilterExchangeRates(CNB.Core.Models.ExchangeRate data, Currency defaultTargetCurrency)
     {
         if (data?.Table.Rows is null)
             throw new EmptyResultSetException("Data cannot be empty");
