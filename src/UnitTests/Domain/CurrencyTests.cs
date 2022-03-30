@@ -6,7 +6,7 @@ namespace ExchangeRate.UnitTests.Domain;
 public class CurrencyTests
 {
     [Fact]
-    public void ShouldReturnCurrencyCode()
+    public void Returns_Currency_AsString()
     {
         var expected = "test";
         var curr = new Currency(expected);
