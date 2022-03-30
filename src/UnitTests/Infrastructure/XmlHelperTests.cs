@@ -7,10 +7,9 @@ namespace ExchangeRate.UnitTests.Infrastructure;
 public class XmlHelperTests
 {
     [Fact]
-    public void ShouldReturnExchangeRateHasRows()
+    public void Returns_ExchangeRate_HasRows()
     {
-        var xmlStr =
-            @"<?xml version=""1.0"" encoding=""UTF-8""?><kurzy banka=""CNB"" datum=""30.03.2022"" poradi=""63""><tabulka typ=""XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU""><radek kod=""AUD"" mena=""dolar"" mnozstvi=""1"" kurz=""16,518"" zeme=""Austrálie""/><radek kod=""BRL"" mena=""real"" mnozstvi=""1"" kurz=""4,635"" zeme=""Brazílie""/></tabulka></kurzy>";
+        var xmlStr = GetValidXmlString();
 
         var xmlObj = xmlStr.FromXml<ExchangeRate.Infrastructure.CNB.Core.Models.ExchangeRate>();
 
@@ -28,10 +27,9 @@ public class XmlHelperTests
     }
 
     [Fact]
-    public void ShouldReturnExchangeRateHasNoTables()
+    public void Returns_ExchangeRate_HasNoTables()
     {
-        var xmlStr =
-            @"<?xml version=""1.0"" encoding=""UTF-8""?><kurzy banka=""CNB"" datum=""30.03.2022"" poradi=""63""><nonExistingTable typ=""XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU""><radek kod=""AUD"" mena=""dolar"" mnozstvi=""1"" kurz=""16,518"" zeme=""Austrálie""/><radek kod=""BRL"" mena=""real"" mnozstvi=""1"" kurz=""4,635"" zeme=""Brazílie""/></nonExistingTable></kurzy>";
+        var xmlStr = GetInvalidXmlString();
 
         var xmlObj = xmlStr.FromXml<ExchangeRate.Infrastructure.CNB.Core.Models.ExchangeRate>();
 
@@ -40,7 +38,7 @@ public class XmlHelperTests
     }
 
     [Fact]
-    public void ShouldThrowInvalidOperationException()
+    public void Throws_InvalidOperationException()
     {
         var xmlStr = "abcd";
         var expectedMessagePrefix = "There is an error in XML document";
@@ -50,5 +48,19 @@ public class XmlHelperTests
         Assert.NotNull(ex);
         Assert.True(ex is InvalidOperationException);
         Assert.StartsWith(expectedMessagePrefix, ex.Message);
+    }
+
+    private static string GetValidXmlString()
+    {
+        var xmlStr =
+            @"<?xml version=""1.0"" encoding=""UTF-8""?><kurzy banka=""CNB"" datum=""30.03.2022"" poradi=""63""><tabulka typ=""XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU""><radek kod=""AUD"" mena=""dolar"" mnozstvi=""1"" kurz=""16,518"" zeme=""Austrálie""/><radek kod=""BRL"" mena=""real"" mnozstvi=""1"" kurz=""4,635"" zeme=""Brazílie""/></tabulka></kurzy>";
+        return xmlStr;
+    }
+
+    private static string GetInvalidXmlString()
+    {
+        var xmlStr =
+            @"<?xml version=""1.0"" encoding=""UTF-8""?><kurzy banka=""CNB"" datum=""30.03.2022"" poradi=""63""><nonExistingTable typ=""XML_TYP_CNB_KURZY_DEVIZOVEHO_TRHU""><radek kod=""AUD"" mena=""dolar"" mnozstvi=""1"" kurz=""16,518"" zeme=""Austrálie""/><radek kod=""BRL"" mena=""real"" mnozstvi=""1"" kurz=""4,635"" zeme=""Brazílie""/></nonExistingTable></kurzy>";
+        return xmlStr;
     }
 }
