@@ -1,5 +1,4 @@
 using System.Xml.Serialization;
-using ExchangeRate.Domain.Entities;
 
 namespace ExchangeRate.Infrastructure.CNB.Core.Models;
 
@@ -8,16 +7,9 @@ public class Row
 {
     [XmlAttribute(AttributeName = "kod")]
     public string Code { get; set; }
-
-    [XmlIgnore]
-    public Currency Currency { get; set; }
-
+    
     [XmlAttribute(AttributeName = "mena")]
-    public string CurrencyFormatted
-    {
-        get => Currency.Code;
-        set => Currency = new Currency(value);
-    }
+    public string CurrencyName { get; set; }
 
     [XmlAttribute(AttributeName = "mnozstvi")]
     public int Amount { get; set; }

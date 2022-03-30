@@ -20,7 +20,7 @@ public class XmlHelperTests
 
         Assert.Equal(2, xmlObj.Table.Rows.Count);
         Assert.Equal("AUD", firstRow.Code);
-        Assert.Equal("dolar", firstRow.Currency.ToString());
+        Assert.Equal("dolar", firstRow.CurrencyName);
         Assert.Equal(1, firstRow.Amount);
         Assert.Equal((decimal)16.518, firstRow.Rate, 4);
         Assert.Equal("Austrálie", firstRow.Country);

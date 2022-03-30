@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using ExchangeRate.Domain.Entities;
 using ExchangeRate.Infrastructure.CNB.Core;
+using ExchangeRate.Infrastructure.CNB.Core.Models;
 using ExchangeRate.Infrastructure.CNB.Core.Repositories;
 using ExchangeRate.Infrastructure.Common;
 using Logging.Exceptions;
@@ -44,8 +45,10 @@ public class ExchangeRateProvider : IExchangeRateProvider
             throw new EmptyResultSetException("Data cannot be empty");
 
         var filter = data.Table.Rows.Where(w => CommonConstants.Currencies.Select(s => s.Code).Contains(w.Code));
-        return filter.Select(f => new Domain.Entities.ExchangeRate(new Currency(f.Code), defaultTargetCurrency, f.Rate));
+        return filter.Select(f => new Domain.Entities.ExchangeRate(new Currency(f.Code), defaultTargetCurrency, GetRate(f)));
     }
+
+    private static decimal GetRate(Row f) => f.Rate / f.Amount;
 
     private static IEnumerable<string> GetExchangeRatesStringValues(IEnumerable<Domain.Entities.ExchangeRate> exchangeRates)
         => exchangeRates.Select(f => f.ToString());
