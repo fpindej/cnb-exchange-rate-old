@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ExchangeRate.Domain.Entities;
 using ExchangeRate.Infrastructure.CNB.Core.Models;
 using ExchangeRate.Infrastructure.CNB.Core.Repositories;
 using Moq;
@@ -18,14 +17,14 @@ public class ExchangeRateRepositoryTests
 
         repository.Setup(r => r.GetExchangeRatesAsync()).ReturnsAsync(tableInMemoryDatabase);
 
-        var result = await  repository.Object.GetExchangeRatesAsync();
-        
+        var result = await repository.Object.GetExchangeRatesAsync();
+
         Assert.NotNull(result);
         Assert.NotNull(result.Table);
         Assert.NotNull(result.Table.Rows);
 
         var firstRow = result.Table.Rows[0];
-        
+
         Assert.Equal(2, result.Table.Rows.Count);
         Assert.Equal("AUD", firstRow.Code);
         Assert.Equal("dolar", firstRow.CurrencyName);
