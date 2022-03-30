@@ -10,6 +10,7 @@ namespace ExchangeRate.Infrastructure.CNB.Client;
 
 public class ExchangeRateProvider : IExchangeRateProvider
 {
+    private const string DefaultCurrency = "CNB:DefaultCurrency";
     private readonly IConfiguration _configuration;
     private readonly IExchangeRateRepository _exchangeRateRepository;
 
@@ -29,7 +30,7 @@ public class ExchangeRateProvider : IExchangeRateProvider
 
     private Currency GetDefaultTargetCurrency()
     {
-        var targetCurrency = _configuration.GetValue<string>("CNB:DefaultCurrency");
+        var targetCurrency = _configuration.GetValue<string>(DefaultCurrency);
 
         if (string.IsNullOrWhiteSpace(targetCurrency))
             throw new ValidationException("Target currency cannot be empty");
@@ -37,7 +38,7 @@ public class ExchangeRateProvider : IExchangeRateProvider
         return new Currency(targetCurrency);
     }
 
-    private static IEnumerable<Domain.Entities.ExchangeRate> FilterExchangeRates(CNB.Core.Models.ExchangeRate data, Currency defaultTargetCurrency)
+    private static IEnumerable<Domain.Entities.ExchangeRate> FilterExchangeRates(Core.Models.ExchangeRate data, Currency defaultTargetCurrency)
     {
         if (data?.Table.Rows is null)
             throw new EmptyResultSetException("Data cannot be empty");
@@ -46,5 +47,6 @@ public class ExchangeRateProvider : IExchangeRateProvider
         return filter.Select(f => new Domain.Entities.ExchangeRate(new Currency(f.Code), defaultTargetCurrency, f.Rate));
     }
 
-    private static IEnumerable<string> GetExchangeRatesStringValues(IEnumerable<Domain.Entities.ExchangeRate> exchangeRates) => exchangeRates.Select(f => f.ToString());
+    private static IEnumerable<string> GetExchangeRatesStringValues(IEnumerable<Domain.Entities.ExchangeRate> exchangeRates)
+        => exchangeRates.Select(f => f.ToString());
 }
