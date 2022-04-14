@@ -41,10 +41,10 @@ public class Startup
         services.AddScoped<IExchangeRateProvider, ExchangeRateProvider>();
 
         Log.Debug("ConfigureServices => Get CNB:BaseUrl");
-        var baseUrl = GetConfigurationValue<string>("CNB:BaseUrl", "https://www.cnb.cz/");
+        var baseUrl = GetConfigurationValue("CNB:BaseUrl", "https://www.cnb.cz/");
 
         Log.Debug("ConfigureServices => Get CNB:RetryCount");
-        var retryCount = GetConfigurationValue<int>("CNB:RetryCount", 5);
+        var retryCount = GetConfigurationValue("CNB:RetryCount", 5);
 
         Log.Debug("ConfigureServices => Setting IExchangeRateService");
 
