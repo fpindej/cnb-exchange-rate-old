@@ -1,5 +1,6 @@
 using System.Net;
 using ExchangeRate.Infrastructure.CNB.Client;
+using ExchangeRate.Infrastructure.CNB.Client.Extensions;
 using ExchangeRate.Infrastructure.CNB.Client.Repositories;
 using ExchangeRate.Infrastructure.CNB.Client.Services;
 using ExchangeRate.Infrastructure.CNB.Core;
@@ -34,23 +35,10 @@ public class Startup
         Log.Debug("ConfigureServices => Setting AddSwaggerGen");
         services.AddSwaggerGen();
 
-        Log.Debug("ConfigureServices => Setting IExchangeRateRepository");
-        services.AddScoped<IExchangeRateRepository, ExchangeRateRepository>();
+        
 
-        Log.Debug("ConfigureServices => Setting IExchangeRateProvider");
-        services.AddScoped<IExchangeRateProvider, ExchangeRateProvider>();
-
-        Log.Debug("ConfigureServices => Get CNB:BaseUrl");
-        var baseUrl = GetConfigurationValue("CNB:BaseUrl", "https://www.cnb.cz/");
-
-        Log.Debug("ConfigureServices => Get CNB:RetryCount");
-        var retryCount = GetConfigurationValue("CNB:RetryCount", 5);
-
-        Log.Debug("ConfigureServices => Setting IExchangeRateService");
-
-        services.AddHttpClient<IExchangeRateService, ExchangeRateService>(opt => { opt.BaseAddress = new Uri(baseUrl); })
-            .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-            .AddPolicyHandler(GetRetryPolicy(retryCount));
+        Log.Debug("ConfigureServices => Setting CnbClient");
+        services.AddCnbClient();
     }
 
 
@@ -114,9 +102,4 @@ public class Startup
         Log.Information("Getting default value for {Key} => {Value}", key, res);
         return res;
     }
-
-    private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(int retryCount) => HttpPolicyExtensions
-        .HandleTransientHttpError()
-        .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
-        .WaitAndRetryAsync(retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 }
